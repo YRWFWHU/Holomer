@@ -1,6 +1,8 @@
 # Holomer
 This repository is an official implementation of paper "Speckle-free holography with a diffraction-aware global perceptual model".
 
+![pic](Hasm.png "pic")
+
 ### Project Structure:
 Holomer/
 
