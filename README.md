@@ -3,6 +3,7 @@ This repository is an official implementation of paper "Speckle-free holography 
 
 ### Project Structure:
 Holomer/
+
 ├── algorithms/ # Model files
 
 ├── config/ # Configuaration files
