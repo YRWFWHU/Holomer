@@ -4,11 +4,17 @@ This repository is an official implementation of paper "Speckle-free holography 
 ### Project Structure:
 Holomer/
 ├── algorithms/ # Model files
+
 ├── config/ # Configuaration files
+
 ├── datasets/ # DIV2K DataClass
+
 ├── utils/
+
 ├── train.py # Train script
+
 ├── test.py 
+
 └── README.md
 
 ### Installing Requirement:
