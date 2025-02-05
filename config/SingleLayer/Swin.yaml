@@ -1,0 +1,43 @@
+seed_everything: 42
+
+trainer:
+  max_epochs: 20000
+  accelerator: 'cuda'
+  log_every_n_steps: 50
+  logger:
+    class_path: pytorch_lightning.loggers.TensorBoardLogger
+    init_args:
+      save_dir: '/lightning_logs'
+      name: 'Swin'
+      log_graph: true
+  devices: [ 0, 1 ]
+  profiler:
+    class_path: pytorch_lightning.profilers.AdvancedProfiler
+    init_args:
+      dirpath: '/lightning_logs/Swin'
+      filename: 'profiler_log'
+  callbacks:
+    - class_path: pytorch_lightning.callbacks.DeviceStatsMonitor
+      init_args: { }
+
+model:
+  slm_phase_generator:
+    class_path: algorithms.backbone.SingleLayer.SingleLayerSwin
+    init_args:
+      resolution: [ 1024, 1920 ]
+  #  wavelengths: [638e-9, 520e-9, 450e-9]
+  wavelengths: [ 450e-9 ]
+  pixel_size: 6.4e-6
+  resolution: [ 1024, 1920 ]
+  distances: [ 20e-2 ]
+  learning_rate: 1e-4
+  complex_model: false
+
+data:
+  data_dir: '/mnt/mnt2/wyr/data/div2k'
+  color_channel: 'blue'
+  train_batch_size: 4
+  val_batch_size: 4
+  pred_batch_size: 2
+  resolution: [ 1024, 1920 ]
+  num_workers: 35

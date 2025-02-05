@@ -1,0 +1,48 @@
+seed_everything: 42
+
+trainer:
+  max_epochs: 20000
+  accelerator: 'cuda'
+  log_every_n_steps: 50
+  logger:
+    class_path: pytorch_lightning.loggers.TensorBoardLogger
+    init_args:
+      save_dir: 'lightning_logs'
+      name: 'U2Net'
+  devices: [ 1 ]
+
+model:
+  init_phase_generator:
+    class_path: algorithms.backbone.U2Net.U2Net
+    init_args:
+      in_ch: 1
+      out_ch: 1
+      target_phase: true
+  slm_phase_generator:
+    class_path: algorithms.backbone.U2Net.U2Net
+    init_args:
+      in_ch: 1
+      out_ch: 1
+      target_phase: false
+  loss_func:
+    class_path: algorithms.backbone.U2Net.MultiMSE
+    init_args:
+      reduction: 'mean'
+  #  wavelengths: [638e-9, 520e-9, 450e-9]
+  wavelengths: [ 520e-9 ]
+  pixel_size: 6.4e-6
+  resolution: [ 512, 1024 ]
+  distances: [ 20e-2 ]
+  learning_rate: 1e-3
+  num_of_frames: 1
+  complex_model: false
+  device: 'cuda:1'
+
+data:
+  data_dir: '/dev/shm/data/DIV2K'
+  train_batch_size: 1
+  val_batch_size: 1
+  pred_batch_size: 1
+  resolution: [ 512, 1024 ]
+  num_of_wavelengths: 1
+  num_workers: 35

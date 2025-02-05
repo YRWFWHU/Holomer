@@ -1,0 +1,27 @@
+seed_everything: 42
+
+trainer:
+  max_epochs: 50
+  accelerator: "cuda"
+  log_every_n_steps: 1
+  logger:
+    class_path: pytorch_lightning.loggers.TensorBoardLogger
+    init_args:
+      save_dir: '/media/machine1/系统/lightning_logs'
+      name: "SGD"
+  devices: [ 0 ]
+
+model:
+#  wavelengths: [520e-9]
+  wavelengths: [638e-9, 520e-9, 450e-9]
+  pixel_size: 400e-9
+  resolution: [1080, 1920]
+  distances: [24e-6]
+  # 0803.png  0805.png  0821.png  0824.png  0829.png  0839.png  0882.png  0886.png  0900.png
+  target_path: "/media/machine1/系统/div2k/test/0886.png"
+  learning_rate: 1e-1
+  number_of_frame: 2
+  num: 'TwoFrame'
+
+data:
+  num_of_steps_each_epoch: 10

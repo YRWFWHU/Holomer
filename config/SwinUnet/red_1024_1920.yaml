@@ -1,0 +1,54 @@
+seed_everything: 42
+
+trainer:
+  max_epochs: 20000
+  accelerator: 'cuda'
+  log_every_n_steps: 50
+  logger:
+    class_path: pytorch_lightning.loggers.TensorBoardLogger
+    init_args:
+      save_dir: '/home/machine1/wyr/Holomer/lightning_logs'
+      name: '512red'
+      log_graph: true
+  devices: [ 0 ]
+  profiler:
+    class_path: pytorch_lightning.profilers.AdvancedProfiler
+    init_args:
+      dirpath: '/dev/shm/lightning_logs/Hardtanh_red_window_1615_patch44_WithoutTVLoss'
+      filename: 'profiler_log'
+  callbacks:
+    - class_path: pytorch_lightning.callbacks.DeviceStatsMonitor
+      init_args: { }
+
+model:
+  init_phase_generator:
+    class_path: algorithms.backbone.Swin.SwinTransformerSys
+    init_args:
+      img_size: [ 512, 512 ]
+      patch_size: [ 4, 4 ]
+      window_size: [ 16, 16 ]
+      in_chans: 1
+  slm_phase_generator:
+    class_path: algorithms.backbone.Swin.SwinTransformerSys
+    init_args:
+      img_size: [ 512, 512 ]
+      patch_size: [ 4, 4 ]
+      window_size: [ 16, 16 ]
+      in_chans: 2
+  #  wavelengths: [638e-9, 520e-9, 450e-9]
+  wavelengths: [ 638e-9 ]
+  pixel_size: 6.4e-6
+  resolution: [ 512, 512 ]
+  distances: [ 20e-2 ]
+  learning_rate: 1e-4
+  num_of_frames: 1
+  complex_model: false
+
+data:
+  data_dir: '/mnt/mnt1/dataset'
+  color_channel: 'red'
+  train_batch_size: 1
+  val_batch_size: 4
+  pred_batch_size: 2
+  resolution: [ 512, 512 ]
+  num_workers: 35

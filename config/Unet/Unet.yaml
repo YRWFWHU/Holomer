@@ -1,0 +1,51 @@
+seed_everything: 42
+
+trainer:
+  max_epochs: 20000
+  accelerator: 'cuda'
+  log_every_n_steps: 50
+  logger:
+    class_path: pytorch_lightning.loggers.TensorBoardLogger
+    init_args:
+      save_dir: '/home/machine1/data/lightning_logs'
+      name: 'Unet_blue_1024_1920'
+  devices: [ 1 ]
+
+model:
+  init_phase_generator:
+    class_path: algorithms.backbone.Unet.Unet
+    init_args:
+      in_channels: 1
+      out_channels: 1
+      nf0: 32
+      num_down: 7
+      max_channels: 256
+      use_dropout: false
+      outermost_linear: true
+  slm_phase_generator:
+    class_path: algorithms.backbone.Unet.Unet
+    init_args:
+      in_channels: 2
+      out_channels: 1
+      nf0: 32
+      num_down: 7
+      max_channels: 256
+      use_dropout: false
+      outermost_linear: true
+  #  wavelengths: [638e-9, 520e-9, 450e-9]
+  wavelengths: [ 450e-9 ]
+  pixel_size: 6.4e-6
+  resolution: [ 1024, 1920 ]
+  distances: [ 20e-2 ]
+  learning_rate: 1e-4
+  num_of_frames: 1
+  complex_model: false
+
+data:
+  data_dir: '/home/machine1/data/div2k'
+  train_batch_size: 1
+  val_batch_size: 4
+  pred_batch_size: 4
+  resolution: [ 1024, 1920 ]
+  num_workers: 35
+  color_channel: 'blue'

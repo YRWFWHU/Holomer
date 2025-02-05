@@ -1,0 +1,53 @@
+seed_everything: 42
+
+trainer:
+  max_epochs: 20000
+  accelerator: 'cuda'
+  log_every_n_steps: 50
+  logger:
+    class_path: pytorch_lightning.loggers.TensorBoardLogger
+    init_args:
+      save_dir: '/home/machine1/data/lightning_logs'
+      name: 'CCNN_red_1024_1920'
+  devices: [ 1 ]
+  profiler:
+    class_path: pytorch_lightning.profilers.AdvancedProfiler
+    init_args:
+      dirpath: '/home/machine1/data/lightning_logs/CCNN_red_1024_1920'
+      filename: 'profiler_log'
+  callbacks:
+    - class_path: pytorch_lightning.callbacks.DeviceStatsMonitor
+      init_args: { }
+
+model:
+  init_phase_generator:
+    class_path: algorithms.backbone.DualNet.CCNN
+    init_args:
+      num_of_stages: 4
+      input_dim_of_first_layer: 1
+      output_dim_of_first_layer: 4
+      output_channels: 1
+  slm_phase_generator:
+    class_path: algorithms.backbone.DualNet.CCNN
+    init_args:
+      num_of_stages: 3
+      input_dim_of_first_layer: 1
+      output_dim_of_first_layer: 4
+      output_channels: 1
+  #  wavelengths: [638e-9, 520e-9, 450e-9]
+  wavelengths: [ 638e-9 ]
+  pixel_size: 6.4e-6
+  resolution: [ 1024, 1920 ]
+  distances: [ 20e-2 ]
+  learning_rate: 1e-3
+  num_of_frames: 1
+  complex_model: true
+
+data:
+  data_dir: '/home/machine1/data/div2k'
+  color_channel: 'red'
+  train_batch_size: 16
+  val_batch_size: 20
+  pred_batch_size: 20
+  resolution: [ 1024, 1920 ]
+  num_workers: 35
